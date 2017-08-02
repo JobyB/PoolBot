@@ -1,0 +1,33 @@
+---
+version: 1
+disable_existing_loggers: False
+formatters:
+    basic:
+        format: '%(levelname)-8s %(name)s %(message)s'
+    full:
+        format: '%(asctime)s %(levelname)-8s %(name)s %(filename)s:%(lineno)d %(message)s'
+handlers:
+    console:
+        class: logging.StreamHandler
+        level: INFO
+        formatter: basic
+        stream: ext://sys.stdout
+
+    debug_file_handler:
+        (): loggingUtils.MyFileHandler
+        level: DEBUG
+        formatter: full
+        filename: debug.log
+        maxBytes: 2097152 # 2MB
+        backupCount: 20
+        encoding: utf8
+
+    critical_handler:
+        (): loggingUtils.ShutdownHandler
+        level: CRITICAL
+        formatter: full
+        stream: ext://sys.stderr
+
+root:
+    level: DEBUG
+    handlers: [console, debug_file_handler, critical_handler]
